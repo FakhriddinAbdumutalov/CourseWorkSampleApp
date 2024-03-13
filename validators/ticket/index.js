@@ -1,4 +1,5 @@
-const { body } = require('express-validator');
+const { body, param } = require('express-validator');
+const ticket_service = require('../../services/ticket')
 
 const addTicketValidation = () => {
   return [
@@ -19,6 +20,18 @@ const addTicketValidation = () => {
   ];
 };
 
+const deleteTicketValidation = () => {
+  return [
+    param('id').custom(async (id) => {
+      const exists = await ticket_service.getById(id);
+      if (!exists) {
+        throw new Error('Ticket not found');
+      }
+    })
+  ];
+};
+
 module.exports = {
-    addTicketValidation
+    addTicketValidation,
+    deleteTicketValidation
 };

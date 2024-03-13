@@ -10,8 +10,17 @@ const ticket_controller = {
         res.status(201).json(
             ticket_service.create(req, res)
         )
+    },
+    delete(req, res) {
+        const ticket = ticket_service.getById(req.params.id)
+        
+        if (ticket) {
+            ticket_service.delete(req.params.id)
+            res.status(204).send('Ticket deleted successfully')
+        } else {
+            res.status(404).send('Ticket not found')
+        }
     }
 }
 
 module.exports = ticket_controller
-

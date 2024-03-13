@@ -31,7 +31,7 @@ script.
                 <td>${ticket.seat}</td>
                 <td>
                   <button class="btn btn-primary btn-sm">Edit</button>
-                  <button class="btn btn-danger btn-sm">Delete</button>
+                  <button class="btn btn-danger btn-sm" data-id="${t.id}">Delete</button>
                 </td>
               `;
               tableBody.appendChild(row);
@@ -39,5 +39,19 @@ script.
           })
           .catch(function(error) {
             console.log(error);
+          });
+
+          // Use event delegation for delete buttons
+          document.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('btn-danger')) {
+              const ticketId = event.target.getAttribute('data-id');
+              axios.delete(`/api/ticket/${ticketId}`).then(function(response) {
+                console.log('Delete successful', response);
+                location.href = '/'
+              })
+              .catch(function(error) {
+                console.log('Error deleting ticket', error);
+              });
+            }
           });
       });
