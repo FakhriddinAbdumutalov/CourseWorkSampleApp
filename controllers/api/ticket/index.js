@@ -11,6 +11,15 @@ const ticket_controller = {
             ticket_service.create(req, res)
         )
     },
+    update(req, res) {
+        const ticket = ticket_service.update(req.params.id, req.body)
+        
+        if (ticket) {
+            res.json(ticket)
+        } else {
+            res.status(404).send('Ticket not found')
+        }
+    },
     delete(req, res) {
         const ticket = ticket_service.getById(req.params.id)
         

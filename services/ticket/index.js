@@ -27,6 +27,19 @@ const ticket_service = {
         
         return new_ticket
     },
+    update(id, updateData){
+        const ticketIndex = tickets.findIndex(t => t.id == id)
+
+        if (ticketIndex === -1) {
+            return null
+        }
+
+        tickets[ticketIndex].ticket = { ...tickets[ticketIndex].ticket, ...updateData }
+
+        writeToFile(tickets)
+
+        return tickets[ticketIndex]
+    },
     delete(id) {
         const index = tickets.findIndex(u => u.id == id)
         tickets.splice(index, 1)    
