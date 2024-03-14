@@ -1,61 +1,81 @@
+// Include common HTML head elements
 include ../head.pug
-body
-    .container.mt-5
-      .row.d-flex.align-items-center
-        .col-md-6
-          h1 List
-        .col-md-6.text-end
-          a.btn.btn-success(href='/add', role='button') Add      
-      table.table.table-responsive.table-hover.table-striped.table-dark
-        thead
-          tr
-            th(scope="col") ID
-            th(scope="col") Event Name
-            th(scope="col") Event DateTime
-            th(scope="col") Venue
-            th(scope="col") Contact Phone
-            th(scope="col") Seat
-            th(scope="col") Actions
-        tbody
-script.
-  document.addEventListener('DOMContentLoaded', function() {
-    axios.get('/api/ticket').then(function(response) {
-      const tickets = response.data;
-      const tableBody = document.querySelector('table tbody');
-      tickets.forEach(t => {
-        const row = document.createElement('tr');
-        const ticket = t.ticket
-        row.innerHTML = `
-          <td>${t.id}</td>
-          <td>${ticket.eventName}</td>
-          <td>${ticket.eventDateTime}</td>
-          <td>${ticket.venue}</td>
-          <td>${ticket.contactPhone}</td>
-          <td>${ticket.seat}</td>
-          <td>
-            <button class="btn btn-primary btn-sm" data-id="${t.id}" onclick="window.location.href='/update/${t.id}'">Update</button>
-            <button class="btn btn-danger btn-sm" data-id="${t.id}">Delete</button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
 
-    // Use event delegation for delete buttons
-    document.addEventListener('click', function(event) {
-      if (event.target && event.target.classList.contains('btn-danger')) {
-        const ticketId = event.target.getAttribute('data-id');
-        axios.delete(`/api/ticket/${ticketId}`).then(function(response) {
-          alert('Deleted successfully', response);
-          location.href = '/'
-        })
-        .catch(function(error) {
-          alert('Error deleting ticket: ' + error);
+// Body section
+body
+  // Container for webpage content
+  .container.mt-5
+    // Row with two columns
+    .row.d-flex.align-items-center
+      // Left column for heading
+      .col-md-6
+        h1 Customer information
+      // Right column for "Add" button
+      .col-md-6.text-end
+        a.btn.btn-success(href='/add', role='button') Add
+
+    // Table to display ticket information
+    table.table.table-responsive.table-hover.table-striped.table-white
+      // Table header
+      thead
+        tr
+          th(scope="col") ID
+          th(scope="col") Customer Name
+          th(scope="col") Customer Birthday
+          th(scope="col") Customer Address
+          th(scope="col") Contact Number
+          th(scope="col") Seat
+          th(scope="col") Changes
+
+      // Table body (will be populated dynamically)
+      tbody
+
+  // Script section for JavaScript functionality
+  script.
+    document.addEventListener('DOMContentLoaded', function() {
+      // Fetch ticket data from server
+      axios.get('/api/ticket').then(function(response) {
+        const tickets = response.data;
+        const tableBody = document.querySelector('table tbody');
+
+        // Iterate over tickets and populate table dynamically
+        tickets.forEach(t => {
+          const row = document.createElement('tr');
+          const ticket = t.ticket;
+
+          // Insert ticket data into table cells
+          row.innerHTML = `
+            <td>${t.id}</td>
+            <td>${ticket.eventName}</td>
+            <td>${ticket.eventDateTime}</td>
+            <td>${ticket.venue}</td>
+            <td>${ticket.contactPhone}</td>
+            <td>${ticket.seat}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" data-id="${t.id}" onclick="window.location.href='/update/${t.id}'">Update</button>
+              <button class="btn btn-danger btn-sm" data-id="${t.id}">Delete</button>
+            </td>
+          `;
+
+          tableBody.appendChild(row);
         });
-      }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+      // Event delegation for delete buttons
+      document.addEventListener('click', function(event) {
+        if (event.target && event.target.classList.contains('btn-danger')) {
+          const ticketId = event.target.getAttribute('data-id');
+          // Send AJAX request to delete ticket
+          axios.delete(`/api/ticket/${ticketId}`).then(function(response) {
+            alert('Deleted successfully', response);
+            location.href = '/';
+          })
+          .catch(function(error) {
+            alert('Error deleting ticket: ' + error);
+          });
+        }
+      });
     });
-    
-  });

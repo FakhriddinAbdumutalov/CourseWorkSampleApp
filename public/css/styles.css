@@ -1,0 +1,21 @@
+body {
+    h1{
+        color: rgb(247, 0, 255);
+    }
+    a.btn.btn-success {
+        background-color: rgb(25, 0, 255);
+        text-decoration-color: black;
+    }
+    a.btn.btn-success:hover {
+        background-color: rgb(3, 3, 3);
+    }
+    table.table.table-responsive.table-hover.table-striped.table-white{
+        background-color: rgb(122, 235, 250);
+        border: 2px solid;
+        text-align: center;
+    }
+    table.table.table-responsive.table-hover.table-striped.table-white th{
+        background-color: rgb(255, 255, 255);
+        text-decoration: blueviolet;
+    }
+}
