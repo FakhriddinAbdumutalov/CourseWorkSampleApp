@@ -1,36 +1,44 @@
-// express web app instance
-const express = require('express')
+// Import the Express module
+const express = require('express');
 
-// parse request body to json
-const body_parser = require('body-parser')
+// Import the body-parser module for parsing request bodies
+const bodyParser = require('body-parser');
 
-// for File IO
-const path = require('path')
+// Import the path module for working with file paths
+const path = require('path');
 
-// make mock database (raw .json file) available globally in app
+// Set the path to the mock database file globally
 global.mock_db = path.join(__dirname, './data/mock_db.json');
 
-const web_route = require('./routes/web/home')
-const api_route = require('./routes/api');
+// Import the web routes and API routes
+const webRoutes = require('./routes/web/home');
+const apiRoutes = require('./routes/api');
 
+// Create an Express application instance
 const app = express();
 
-// Set the view engine for web routes
+// Set the view engine for rendering web pages
 app.set('view engine', 'pug');
 
-app.use('/css', express.static('public/css'))
-app.use('/js', express.static('public/js'))
+// Serve static files from the 'public' directory for CSS and JS
+app.use('/css', express.static('public/css'));
+app.use('/js', express.static('public/js'));
 
+// Parse JSON bodies and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', api_route); // API routes
-app.use('/', web_route); // web routes
+// Mount API routes under the '/api' prefix
+app.use('/api', apiRoutes);
 
-// redirect to home page if unknown requests requested
+// Mount web routes under the root URL
+app.use('/', webRoutes);
+
+// Redirect to the home page if unknown requests are requested
 app.use((req, res) => {
     res.redirect('/');
 });
 
+// Start the server and listen on port 3000
 const port = 3000;
 app.listen(port, () => console.log(`Server running on port ${port}`));

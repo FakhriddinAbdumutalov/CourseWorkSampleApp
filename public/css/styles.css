@@ -1,20 +1,31 @@
+/* Set styles for elements within the body */
+
 body {
-    h1{
-        color: rgb(247, 0, 255);
+    /* Set color for h1 elements */
+    h1 {
+        color: rgb(247, 0, 255); /* Pink color */
     }
+
+    /* Set styles for links with specific classes */
     a.btn.btn-success {
-        background-color: rgb(25, 0, 255);
+        background-color: rgb(25, 0, 255); 
         text-decoration-color: black;
     }
+
+    /* Set hover styles for success buttons */
     a.btn.btn-success:hover {
-        background-color: rgb(3, 3, 3);
+        background-color: rgb(3, 3, 3); /* Dark background color on hover */
     }
-    table.table.table-responsive.table-hover.table-striped.table-white{
-        background-color: rgb(122, 235, 250);
-        border: 2px solid;
-        text-align: center;
+
+    /* Set styles for tables with specific classes */
+    table.table.table-responsive.table-hover.table-striped.table-white {
+        background-color: rgb(122, 235, 250); 
+        border: 2px solid; /* Added border with 2px width */
+        text-align: center; 
     }
-    table.table.table-responsive.table-hover.table-striped.table-white th{
+
+    /* Set styles for table headers within specific tables */
+    table.table.table-responsive.table-hover.table-striped.table-white th {
         background-color: rgb(255, 255, 255);
         text-decoration: blueviolet;
     }

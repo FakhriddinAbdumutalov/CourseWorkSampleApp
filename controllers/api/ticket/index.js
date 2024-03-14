@@ -1,35 +1,50 @@
-// import specific service class
-const ticket_service = require('../../../services/ticket')
+// Import specific service class for handling ticket-related operations
+const ticketService = require('../../../services/ticket');
 
-// mention the service's needed actions (methods)
-const ticket_controller = {
+// Define ticket controller with methods for handling different actions related to tickets
+const ticketController = {
+    // Get all tickets
     getAll(req, res) {
-        res.json(ticket_service.getAll())
+        // Return all tickets as JSON response
+        res.json(ticketService.getAll());
     },
+
+    // Create a new ticket
     create(req, res) {
-        res.status(201).json(
-            ticket_service.create(req, res)
-        )
+        // Create a new ticket using data from the request body
+        // Return the newly created ticket as JSON response with status code 201 (Created)
+        res.status(201).json(ticketService.create(req, res));
     },
+
+    // Update an existing ticket
     update(req, res) {
-        const ticket = ticket_service.update(req.params.id, req.body)
+        // Update the ticket with the specified ID using data from the request body
+        const ticket = ticketService.update(req.params.id, req.body);
         
+        // If the ticket was found and updated successfully, return the updated ticket as JSON response
+        // Otherwise, return 404 (Not Found) status code with an error message
         if (ticket) {
-            res.json(ticket)
+            res.json(ticket);
         } else {
-            res.status(404).send('Ticket not found')
+            res.status(404).send('Ticket not found');
         }
     },
+
+    // Delete an existing ticket
     delete(req, res) {
-        const ticket = ticket_service.getById(req.params.id)
+        // Retrieve the ticket with the specified ID
+        const ticket = ticketService.getById(req.params.id);
         
+        // If the ticket exists, delete it from the database and return 204 (No Content) status code
+        // Otherwise, return 404 (Not Found) status code with an error message
         if (ticket) {
-            ticket_service.delete(req.params.id)
-            res.status(204).send('Ticket deleted successfully')
+            ticketService.delete(req.params.id);
+            res.status(204).send('Ticket deleted successfully');
         } else {
-            res.status(404).send('Ticket not found')
+            res.status(404).send('Ticket not found');
         }
     }
-}
+};
 
-module.exports = ticket_controller
+// Export the ticket controller to be used in other parts of the application
+module.exports = ticketController;
