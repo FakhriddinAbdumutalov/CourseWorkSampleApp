@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!DOCTYPE html>
+    <html lang="en">
+    <body>
+     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>This web application was created to fulfill Web Technology module’s requirements and does not represent an actual company or service</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/styles.css">
+    
+        <!-- CSS for datetimepicker -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css"
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    
+        <!-- JS for datetimepicker -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script type="text/javascript" src="/js/scripts.js"></script>
+
+        <!-- Include common HTML head elements -->
+        <link rel="stylesheet" href="../path/to/head.css">
+     </head>
+    
+     <!-- Container for webpage content -->
+     <div class="container mt-5">
+        <!-- Row with two columns -->
+        <div class="row d-flex align-items-center">
+            <!-- Left column for heading -->
+            <div class="col-md-6">
+                <h1>Customer information</h1>
+            </div>
+            <!-- Right column for "Add" button -->
+            <div class="col-md-6 text-end">
+                <a class="btn btn-success" href="/add" role="button">Add</a>
+            </div>
+        </div>
+
+        <!-- Table to display ticket information -->
+        <table class="table table-responsive table-hover table-striped table-white">
+            <!-- Table header -->
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Customer Birthday</th>
+                    <th scope="col">Customer Address</th>
+                    <th scope="col">Contact Number</th>
+                    <th scope="col">Seat</th>
+                    <th scope="col">Changes</th>
+                </tr>
+            </thead>
+            <!-- Table body (will be populated dynamically) -->
+            <tbody></tbody>
+        </table>
+     </div>
+
+       <!-- Script section for JavaScript functionality -->
+       <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch ticket data from server
+            axios.get('/api/ticket').then(function(response) {
+                const tickets = response.data;
+                const tableBody = document.querySelector('table tbody');
+
+                // Iterate over tickets and populate table dynamically
+                tickets.forEach(t => {
+                    const row = document.createElement('tr');
+                    const ticket = t.ticket;
+
+                    // Insert ticket data into table cells
+                    row.innerHTML = `
+                        <td>${t.id}</td>
+                        <td>${ticket.eventName}</td>
+                        <td>${ticket.eventDateTime}</td>
+                        <td>${ticket.venue}</td>
+                        <td>${ticket.contactPhone}</td>
+                        <td>${ticket.seat}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" data-id="${t.id}" onclick="window.location.href='/update/${t.id}'">Update</button>
+                            <button class="btn btn-danger btn-sm" data-id="${t.id}">Delete</button>
+                        </td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+
+            // Event delegation for delete buttons
+            document.addEventListener('click', function(event) {
+                if (event.target && event.target.classList.contains('btn-danger')) {
+                    const ticketId = event.target.getAttribute('data-id');
+                    // Send AJAX request to delete ticket
+                    axios.delete(`/api/ticket/${ticketId}`).then(function(response) {
+                        alert('Deleted successfully', response);
+                        location.href = '/';
+                    })
+                    .catch(function(error) {
+                        alert('Error deleting ticket: ' + error);
+                    });
+                }
+            });
+        });
+       </script>
+       
+    </body>
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Customer information</h1>
+        <div class="mb-3">
+            <label for="eventName" class="form-label">Customer Name</label>
+            <input type="text" class="form-control" id="eventName" name="eventName" required>
+        </div>
+        <div class="mb-3">
+            <label for="eventDateTime" class="form-label">Customer Birthday</label>
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1" id="eventDateTime"
+                    name="eventDateTime" required>
+                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="venue" class="form-label">Customer Address</label>
+            <input type="text" class="form-control" id="venue" name="venue" required>
+        </div>
+        <div class="mb-3">
+            <label for="contactPhone" class="form-label">Contact Number</label>
+            <input type="tel" class="form-control" id="contactPhone" name="contactPhone" required>
+        </div>
+        <div class="mb-3">
+            <label for="seat" class="form-label">Seat</label>
+            <input type="text" class="form-control" id="seat" name="seat" required>
+        </div>
+        <button type="submit" class="btn btn-success" onclick="submitForm()">Create</button>
+        <span>&nbsp;</span>
+        <button type="submit" class="btn btn-primary" onclick="window.location.href='/'">Return previous page</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        const format = 'DD/MM/YYYY HH:mm';
+        const picker = new tempusDominus.TempusDominus(document.getElementById('datetimepicker1'), {
+            localization: {
+                'locale': 'fr'
+            }
+        });
+        picker.dates.formatInput = function (date) {
+            return moment(date).format(format);
+        };
+
+        
+  
+  
